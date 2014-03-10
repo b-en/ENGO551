@@ -1,7 +1,7 @@
 // Create SVG
 var width = 1800;
 var height = 1000;
-var proj = d3.geo.mercator();
+var proj = d3.geo.mercator().scale(300).translate([width / 2, 2 * height / 3]);
 var path = d3.geo.path().projection(proj);
 var t = proj.translate(); // the projection's default translation
 var s = proj.scale() // the projection's default scale
@@ -13,15 +13,14 @@ var map = d3.select("#mapContainer").append("svg")
 
 var world = map.append("g").attr("id", "world");
 
-// Load json files
-
-
-d3.json("/json/continent_wl.json", function(json) {
-	world.selectAll("path")
-		.data(json.features).enter().append("path")
-			.attr("d", path);
+// Load world data
+d3.json("/json/world110m.json", function(json) {
+	console.log(json);
+	// Countries
+	world.append("path")
+		.datum(topojson.feature(json, json.objects.countries))
+			.attr("d", path);	
 });
-
 
 function redraw() {
       // d3.event.translate (an array) stores the current translation from the parent SVG element
