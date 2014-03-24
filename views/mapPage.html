@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block CSS %}
+<link href="/css/starter-template.css" rel="stylesheet">
+<link href="/css/tripPlan.css" rel="stylesheet">
+{% endblock %}
+
+{% block CONTENT %}
+
+{% include "navBar.html" %}
+
+<div class="container-fluid">
+	<div class="row">
+		
+		<div class="col-md-4" id="controls">
+			<h1>Here is some content</h1>
+			<p>Users will interact with some UI elements here.</p>
+		</div><!-- /.controls -->
+
+		<div class="col-md-8">
+			<div class="google-map-canvas" id="mapCanvas">hi</div>
+		</div><!-- /.map -->
+
+	</div><!-- /.row -->
+</div><!-- /.container-fluid -->
+
+{% endblock %}
+
+{% block SCRIPTS %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhj8mHiWoVp_RptJBMiKk1bFP3r3yS5fo&sensor=false"></script>
+<script src="/js/map.js"></script>
+{% endblock %}

@@ -1,16 +1,23 @@
 // Module dependencies.
 var express = require('express');
+var nunjucks = require('nunjucks');
 var path = require('path');
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
 app.set('env', process.env.NODE_ENV || 'development');
+app.set('views', path.join(__dirname, 'views'));
+
+// Nunjucks templating
+nunjucks.configure('views', {
+	autoescape : true,
+	express    : app,
+});
 
 // Configuration
 app.configure( function() {
 	app.use(express.logger('dev'));
 	app.use(express.json());
-	app.use(express.urlencoded());
 	app.use(express.methodOverride());
 	app.use(express.cookieParser());
 	app.use(express.session({ secret: 'ezMode' }));
@@ -32,7 +39,7 @@ app.use(function(error, req, res, next) {
 });
 
 // Routes
-require('./routes/handlers');
+require('./routes/handlers')(app);
 
 app.listen(app.get('port'), function(){
 	console.log('Listening on port ' + app.get('port') + 
