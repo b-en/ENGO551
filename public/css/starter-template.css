@@ -1,7 +1,11 @@
-body {
-  padding-top: 50px;
-}
 .starter-template {
   padding: 40px 15px;
   text-align: center;
+}
+#saveAll {
+	float: right;
+}
+.input-group-addon {
+    min-width: 200px;
+    text-align: center;
 }

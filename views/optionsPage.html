@@ -7,19 +7,60 @@
 {% block CONTENT %}
 
 {% include "navBar.html" %}
-
+<body>
 <div class="container-fluid">
 	<div class="row">
 		
-		<div class="col-md-12">
-			<h1>Options go here!</h1>
-			<p>Users will interact with some UI elements here.</p>
-		</div><!-- /.controls -->
+		<div class="col-md-4" id="options">
+			
+			<div class="panel panel-default">
+
+				<div class="panel-heading">
+					<h3 class="panel-title">Options</h3>
+				</div><!-- /.panel-heading -->
+
+				<div class="panel-body">
+					<div class="input-group">
+						<span class="input-group-addon">Username</span>
+						<input type="text" class="form-control" placeholder="Username" id="username">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon">City</span>
+						<input type="text" class="form-control" placeholder="City (optional)" id="city">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon">Country</span>
+						<input type="text" class="form-control" placeholder="Country" id="country">
+					</div>
+				</div><!-- /.panel-body -->
+
+			</div><!-- /.panel -->
+
+			<div class="row">
+
+				<div class="col-md-11">
+					<div class="alert alert-success" id="alertSuccess">
+						<strong>Success!</strong> Changes have been saved.
+					</div>
+
+					<div class="alert alert-danger" id="alertFailure">
+						<strong>Uh-oh!</strong> You need to enable localStorage to save your options.
+					</div>
+				</div>
+
+				<div class="col-md-1">
+					<button type="button" class="btn btn-success btn-lg" id="saveAll"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+				</div>
+
+			</div><!-- /.row (nested) -->
+
+		</div><!-- /.options -->
 
 	</div><!-- /.row -->
 </div><!-- /.container-fluid -->
-
+</body>
 {% endblock %}
 
 {% block SCRIPTS %}
+<script src="/js/options.js"></script>
 {% endblock %}
