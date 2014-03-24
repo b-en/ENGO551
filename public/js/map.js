@@ -16,4 +16,15 @@ function initialize() {
 
 google.maps.event.addDomListener(window, 'load', initialize);
 
+// Tabs for Past Travels and Planned Travels
+$('#past a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+});
+$('#planned a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+
+
 });
