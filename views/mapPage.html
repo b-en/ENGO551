@@ -21,8 +21,59 @@
 
 			<!-- Tab panes -->
 			<div class="tab-content">
-				<div class="tab-pane active fade in" id="past">Past Content</div>
-				<div class="tab-pane fade" id="planned">Planned Content</div>
+
+				<!-- Past Trips Pane -->
+				<div class="tab-pane active fade in" id="past">
+					
+					<!-- Control bar at top of past trips pane -->
+					<nav class="navbar navbar-default" role="navigation">
+						<div class="container-fluid">
+							<div class="navbar-header">
+								<a class="navbar-brand" href="#">Select a trip</a>
+							</div>
+							<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+								<ul class="nav navbar-nav">
+									<li class="dropdown">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown">Trips <b class="caret"></b></a>
+										<ul class="dropdown-menu" id="tripList">
+											<li><a href="#">Example</a></li>
+										</ul>
+									</li>
+								</ul>
+							  <form class="navbar-form navbar-right">
+							    <button class="btn btn-default" id="createNewPast">Create new</button>
+							  </form>
+							</div><!-- /.navbar-collapse -->
+						</div><!-- /.container-fluid -->
+					</nav>
+
+				</div><!-- /.Past Trips Pane -->
+
+				<!-- Planned Trips Pane -->
+				<div class="tab-pane fade" id="planned">
+
+					<!-- Control bar at top of planned trips pane -->
+					<nav class="navbar navbar-default" role="navigation">
+						<div class="container-fluid">
+							<div class="navbar-header">
+								<a class="navbar-brand" href="#">Select a plan</a>
+							</div>
+							<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+								<ul class="nav navbar-nav">
+									<li class="dropdown">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown">Plans <b class="caret"></b></a>
+										<ul class="dropdown-menu" id="planList">
+											<li><a href="#">Example</a></li>
+										</ul>
+									</li>
+								</ul>
+							  <form class="navbar-form navbar-right">
+							    <button class="btn btn-default" id="createNewPlanned">Create new</button>
+							  </form>
+							</div><!-- /.navbar-collapse -->
+						</div><!-- /.container-fluid -->
+					</nav>
+				</div> <!-- /.Planned Trips Page -->
 			</div>
 
 		</div><!-- /.controls -->
