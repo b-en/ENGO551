@@ -89,6 +89,7 @@ $('#createNewPast').click(function (e) {
 		if( tripExists === false ){
 			userTrips.push(newTrip);
 			$("#tripName")[0].text = newTrip.tripName;
+			$("#tripList").append($("<li>").append($("<a href=\"#\">" + newTrip.tripName + "</a>")));
 		} else {
 			userTrips[tripExists] = newTrip;
 		}
