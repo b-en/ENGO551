@@ -31,8 +31,9 @@ $('#planned a').click(function (e) {
 });
 
 var $tripTemplate = $("#tripTemplate").children();
-var userTrips = [];
+$("#tripTemplate").remove();
 
+var userTrips = [];
 
 // Button to add a new past trip
 $('#createNewPast').click(function (e) {
@@ -74,7 +75,7 @@ $('#createNewPast').click(function (e) {
 
 		// Get form values
 		var newTrip = {
-			tripName : $("#tripName").val(),
+			tripName : $("#newTripName").val(),
 			destination : $("#destination").val(),
 			startDate : $("#startDate")[0].innerHTML,
 			endDate : $("#endDate")[0].innerHTML,
@@ -82,19 +83,29 @@ $('#createNewPast').click(function (e) {
 			reccomendations : $("#recommendations")[0].value,
 			leftoverCurrency : currency
 		}
-		userTrips.push(newTrip);
+
+		// Check if this is a new trip or one that needs to be upated. Returns either false of the index
+		var tripExists = checkForTrip(newTrip.tripName, userTrips);
+		if( tripExists === false ){
+			userTrips.push(newTrip);
+			$("#tripName")[0].text = newTrip.tripName;
+		} else {
+			userTrips[tripExists] = newTrip;
+		}
 		console.log(userTrips);
 
 		// Convert to JSON and save to localStorage
 		var userTripsJSON = JSON.stringify(userTrips);
 		localStorage.setItem("TravelBuddyMyTrips", userTripsJSON);
 
+		/*
 		// Check that the values were saved
 		if( localStorage.getItem("TravelBuddyMyTrips") != null ){
 			$alertSuccess.fadeIn(400).delay(1000).fadeOut(800);
 		} else {
 			$alertFailure.fadeIn(400).delay(1000).fadeOut(800);
 		}
+		*/
 	});
 });
 
@@ -103,6 +114,25 @@ $('#createNewPast').click(function (e) {
 // Date picker
 var startDate = new Date(2013,1,1);
 var endDate = new Date(2014,1,1);
+
+function checkForTrip (tripName, existing) {
+	var index;
+	var tripExists = false;
+	for( var i = 0; i < existing.length; i++ ){
+		if( existing[i].tripName == tripName ){
+			index = i;
+			tripExists = true;
+			console.log("Trip exists");
+		}
+	}
+
+	if(tripExists == true){
+		return index;
+	} else {
+		console.log("Not found");
+		return tripExists;
+	}
+}
 
 function addTrip( appendTo, tripTemplate ) {
 	if( tripActive == false ){
