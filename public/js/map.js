@@ -1,25 +1,28 @@
 var tripActive = false;
 var $activeTrip;
 
-$(document).ready(function() {
+// New map
+google.load('visualization', '1', {'packages': ['geochart']});
+google.setOnLoadCallback(drawRegionsMap);
 
-var map;
-var theme = [{"featureType":"road","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#fffffa"}]},{"featureType":"water","stylers":[{"color":"#46bcec"},]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"transit","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"lightness":40}]}];
+function drawRegionsMap() {
+	var data = google.visualization.arrayToDataTable([
+		['Country', 'Popularity'],
+		['Germany', 200],
+		['United States', 300],
+		['Brazil', 400],
+		['Canada', 500],
+		['France', 600],
+		['RU', 700]
+	]);
 
-function initialize () {
-	var myLatlng = new google.maps.LatLng(21.079529, -114.132446);
-	var myOptions = {
-		zoom: 2,
-		center: myLatlng,
-		mapTypeId: google.maps.MapTypeId.ROADMAP,
-		mapTypeControl: true,
-		styles: theme
-	};
+	var options = {};
 
-	map = new google.maps.Map(document.getElementById('mapCanvas'), myOptions);
+	var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
+	chart.draw(data, options);
 };
 
-google.maps.event.addDomListener(window, 'load', initialize);
+$(document).ready(function() {
 
 // Tabs for Past Travels and Planned Travels
 $('#past a').click(function (e) {
@@ -68,6 +71,7 @@ $('#createNewPast').click(function (e) {
 		tripActive = false;
 	}
 	addTrip('#past', $tripTemplate);
+	$("#tripName")[0].text = "New Trip";
 });
 
 // Date picker

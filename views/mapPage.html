@@ -9,7 +9,6 @@
 {% block CONTENT %}
 
 {% include "navBar.html" %}
-
 <div class="container-fluid">
 	<div class="row">
 		
@@ -132,19 +131,26 @@
 					</div><!-- /.panel-body -->
 				</div><!-- /.panel -->
 			</div><!-- /.TripTemplate -->
+
 		</div><!-- /.controls -->
 
 		<div class="col-md-8">
+			<!-- OLD MAP
+			<input id="pac-input" class="controls" type="text" placeholder="Search Box">
 			<div class="google-map-canvas" id="mapCanvas">hi</div>
+			-->
+			<div id='chart_div'></div>
 		</div><!-- /.map -->
 
 	</div><!-- /.row -->
 </div><!-- /.container-fluid -->
-
 {% endblock %}
 
 {% block SCRIPTS %}
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhj8mHiWoVp_RptJBMiKk1bFP3r3yS5fo&sensor=false"></script>
+<!-- OLD MAP
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhj8mHiWoVp_RptJBMiKk1bFP3r3yS5fo&sensor=false&libraries=places"></script> 
+-->
+<script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script src="/js/bootstrap-datepicker.js"></script>
 <script src="/js/map.js"></script>
 {% endblock %}
