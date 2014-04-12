@@ -46,6 +46,7 @@ if( localStorage.getItem("TravelBuddyMyTrips") != null ){
 		$("#tripList").append($("<li>").append($("<a href=\"#\">" + elem.tripName + "</a>").addClass("tripSelect")));
 	})
 }
+
 // Open past trip details if it's selected from the list
 $('.tripSelect').click(function (e) {
 	e.preventDefault();
@@ -61,6 +62,10 @@ $('.tripSelect').click(function (e) {
 // Button to add a new past trip
 $('#createNewPast').click(function (e) {
 	e.preventDefault();
+	if ($activeTrip){
+		$activeTrip.remove();
+		tripActive = false;
+	}
 	addTrip('#past', $tripTemplate);
 });
 
