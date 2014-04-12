@@ -57,6 +57,7 @@ $('.tripSelect').click(function (e) {
 	addTrip('#past', $tripTemplate);
 	loadTrip(userTrips[checkForTrip(this.innerHTML, userTrips)]);
 	attachEvents();
+	$("#tripName")[0].text = userTrips[checkForTrip(this.innerHTML, userTrips)].tripName;
 });
 
 // Button to add a new past trip
