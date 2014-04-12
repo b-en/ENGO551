@@ -29,7 +29,7 @@ $(document).ready(function() {
 			$('#email').val(userOptions.email);
 		}
 		// Display saved privacy option
-		if( userOptions.email != null ){
+		if( userOptions.sharing != null ){
 			$('#public').removeClass('active');
 			$('#' + userOptions.sharing).addClass('active');
 		}

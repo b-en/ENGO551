@@ -34,6 +34,17 @@ var $tripTemplate = $("#tripTemplate").children();
 $("#tripTemplate").remove();
 
 var userTrips = [];
+// Load trips if they exist
+if( localStorage.getItem("TravelBuddyMyTrips") != null ){
+	// Load options
+	var userTripsJSON = localStorage.getItem("TravelBuddyMyTrips"),
+		userTrips = $.parseJSON(userTripsJSON);
+	console.log(userTrips);
+	userTrips.forEach( function ( elem ) { 
+		$("#tripList").append($("<li>").append($("<a href=\"#\">" + elem.tripName + "</a>")));
+	})
+
+}
 
 // Button to add a new past trip
 $('#createNewPast').click(function (e) {
@@ -80,7 +91,7 @@ $('#createNewPast').click(function (e) {
 			startDate : $("#startDate")[0].innerHTML,
 			endDate : $("#endDate")[0].innerHTML,
 			activities : $("#activities")[0].value,
-			reccomendations : $("#recommendations")[0].value,
+			recommendations : $("#recommendations")[0].value,
 			leftoverCurrency : currency
 		}
 
@@ -108,8 +119,6 @@ $('#createNewPast').click(function (e) {
 		}
 		*/
 	});
-});
-
 });
 
 // Date picker
@@ -140,4 +149,31 @@ function addTrip( appendTo, tripTemplate ) {
 		tripTemplate.clone().appendTo( appendTo ).fadeIn(400);
 		tripActive = true;
 	}
-};
+}
+
+function loadTrip ( trip ) {
+	// Display existing values on form
+	if( trip.destination != null && trip.destination != ""){
+		$('#destination').val(trip.destination);
+	}
+	if( trip.startDate != null && trip.startDate != ""){
+		$('#startDate')[0].innerHTML = trip.startDate;
+	}
+	if( trip.endDate != null && trip.endDate != ""){
+		$('#endDate')[0].innerHTML = trip.endDate;
+	}
+	if( trip.activities != null && trip.activities != ""){
+		$('#activities')[0].value = trip.activities;
+	}
+	if( trip.recommendations != null && trip.recommendations != ""){
+		$('#recommendations')[0].value = trip.recommendations;
+	}
+	if( trip.startDate != null && trip.startDate != ""){
+		$('#startDate')[0].innerHTML = trip.startDate;
+	}
+	if( trip.leftoverCurrency === true ){
+		$('#leftoverFalse').removeClass("active");
+		$('#leftoverTrue').addClass("active");
+	}
+}
+});
