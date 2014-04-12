@@ -1,4 +1,5 @@
 var tripActive = false;
+var $activeTrip;
 
 $(document).ready(function() {
 
@@ -34,6 +35,7 @@ var $tripTemplate = $("#tripTemplate").children();
 $("#tripTemplate").remove();
 
 var userTrips = [];
+
 // Load trips if they exist
 if( localStorage.getItem("TravelBuddyMyTrips") != null ){
 	// Load options
@@ -41,16 +43,89 @@ if( localStorage.getItem("TravelBuddyMyTrips") != null ){
 		userTrips = $.parseJSON(userTripsJSON);
 	console.log(userTrips);
 	userTrips.forEach( function ( elem ) { 
-		$("#tripList").append($("<li>").append($("<a href=\"#\">" + elem.tripName + "</a>")));
+		$("#tripList").append($("<li>").append($("<a href=\"#\">" + elem.tripName + "</a>").addClass("tripSelect")));
 	})
-
 }
+// Open past trip details if it's selected from the list
+$('.tripSelect').click(function (e) {
+	e.preventDefault();
+	if ($activeTrip){
+		$activeTrip.remove();
+		tripActive = false;
+	}
+	addTrip('#past', $tripTemplate);
+	loadTrip(userTrips[checkForTrip(this.innerHTML, userTrips)]);
+	attachEvents();
+});
 
 // Button to add a new past trip
 $('#createNewPast').click(function (e) {
 	e.preventDefault();
 	addTrip('#past', $tripTemplate);
+});
 
+// Date picker
+var startDate = new Date(2013,1,1);
+var endDate = new Date(2014,1,1);
+
+function checkForTrip (tripName, existing) {
+	var index;
+	var tripExists = false;
+	for( var i = 0; i < existing.length; i++ ){
+		if( existing[i].tripName == tripName ){
+			index = i;
+			tripExists = true;
+			console.log("Trip exists");
+		}
+	}
+
+	if(tripExists == true){
+		return index;
+	} else {
+		console.log("Not found");
+		return tripExists;
+	}
+}
+
+function addTrip( appendTo, tripTemplate ) {
+	if( tripActive == false ){
+		$activeTrip = tripTemplate.clone().appendTo( appendTo ).fadeIn(400);
+		tripActive = true;
+	}
+
+	attachEvents();
+}
+
+function loadTrip ( trip ) {
+	// Display existing values on form
+	if( trip.tripName != null && trip.tripName != ""){
+		$('#newTripName').val(trip.tripName);
+	}
+	if( trip.destination != null && trip.destination != ""){
+		$('#destination').val(trip.destination);
+	}
+	if( trip.startDate != null && trip.startDate != ""){
+		$('#startDate')[0].innerHTML = trip.startDate;
+	}
+	if( trip.endDate != null && trip.endDate != ""){
+		$('#endDate')[0].innerHTML = trip.endDate;
+	}
+	if( trip.activities != null && trip.activities != ""){
+		$('#activities')[0].value = trip.activities;
+	}
+	if( trip.recommendations != null && trip.recommendations != ""){
+		$('#recommendations')[0].value = trip.recommendations;
+	}
+	if( trip.startDate != null && trip.startDate != ""){
+		$('#startDate')[0].innerHTML = trip.startDate;
+	}
+	if( trip.leftoverCurrency === true ){
+		$('#leftoverFalse').removeClass("active");
+		$('#leftoverTrue').addClass("active");
+	}
+}
+
+function attachEvents () {
 	$('#dp4').datepicker()
 	.on('changeDate', function(ev){
 		if (ev.date.valueOf() > endDate.valueOf()){
@@ -119,61 +194,6 @@ $('#createNewPast').click(function (e) {
 		}
 		*/
 	});
-});
-
-// Date picker
-var startDate = new Date(2013,1,1);
-var endDate = new Date(2014,1,1);
-
-function checkForTrip (tripName, existing) {
-	var index;
-	var tripExists = false;
-	for( var i = 0; i < existing.length; i++ ){
-		if( existing[i].tripName == tripName ){
-			index = i;
-			tripExists = true;
-			console.log("Trip exists");
-		}
-	}
-
-	if(tripExists == true){
-		return index;
-	} else {
-		console.log("Not found");
-		return tripExists;
-	}
 }
 
-function addTrip( appendTo, tripTemplate ) {
-	if( tripActive == false ){
-		tripTemplate.clone().appendTo( appendTo ).fadeIn(400);
-		tripActive = true;
-	}
-}
-
-function loadTrip ( trip ) {
-	// Display existing values on form
-	if( trip.destination != null && trip.destination != ""){
-		$('#destination').val(trip.destination);
-	}
-	if( trip.startDate != null && trip.startDate != ""){
-		$('#startDate')[0].innerHTML = trip.startDate;
-	}
-	if( trip.endDate != null && trip.endDate != ""){
-		$('#endDate')[0].innerHTML = trip.endDate;
-	}
-	if( trip.activities != null && trip.activities != ""){
-		$('#activities')[0].value = trip.activities;
-	}
-	if( trip.recommendations != null && trip.recommendations != ""){
-		$('#recommendations')[0].value = trip.recommendations;
-	}
-	if( trip.startDate != null && trip.startDate != ""){
-		$('#startDate')[0].innerHTML = trip.startDate;
-	}
-	if( trip.leftoverCurrency === true ){
-		$('#leftoverFalse').removeClass("active");
-		$('#leftoverTrue').addClass("active");
-	}
-}
 });
