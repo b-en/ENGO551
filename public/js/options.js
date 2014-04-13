@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
 	var $save = $("#saveAll"),
+		$deleteAll = $('#deleteAll'),
 		$alertSuccess = $("#alertSuccess"),
 		$alertFailure = $("#alertFailure");
 
@@ -69,5 +70,11 @@ $(document).ready(function() {
 			$alertFailure.fadeIn(400).delay(1000).fadeOut(800);
 		}
 	});
+
+	$deleteAll.on("click", function (e) {
+		localStorage.removeItem("TravelBuddyOptions");
+		localStorage.removeItem("TravelBuddyMyPlannedTrips");
+		localStorage.removeItem("TravelBuddyMyTrips");
+	})
 
 });

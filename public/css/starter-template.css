@@ -5,6 +5,10 @@
 #saveAll {
 	float: right;
 }
+#deleteAll {
+	margin-top: 540px;
+	float: right;
+}
 .input-group-addon {
     min-width: 200px;
     text-align: center;

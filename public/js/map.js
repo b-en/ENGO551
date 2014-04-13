@@ -22,20 +22,36 @@ var $plannedTripTemplate = $("#plannedTripTemplate").children();
 $("#tripTemplate").remove();
 $("#plannedTripTemplate").remove();
 var userTrips = [];
+var userPlannedTrips = [];
 
 // Load trips if they exist
 if( localStorage.getItem("TravelBuddyMyTrips") != null ){
 	// Load options
-	var userTripsJSON = localStorage.getItem("TravelBuddyMyTrips"),
-		userTrips = $.parseJSON(userTripsJSON);
+	var userTripsJSON = localStorage.getItem("TravelBuddyMyTrips");
+	var userTrips = $.parseJSON(userTripsJSON);
 	console.log(userTrips);
 	// Add to trip list
 	userTrips.forEach( function ( elem ) { 
 		$("#tripList").append($("<li>").append($("<a href=\"#\">" + elem.tripName + "</a>").addClass("tripSelect")));
 	})
-	// Draw Map
-	drawRegionsMap(userTrips);
 }
+// Draw Map
+drawRegionsMap(userTrips, "past");
+
+// Load planned trips if they exist
+if( localStorage.getItem("TravelBuddyMyPlannedTrips") != null ){
+	// Load options
+	var userPlannedTripsJSON = localStorage.getItem("TravelBuddyMyPlannedTrips");
+	var userPlannedTrips = $.parseJSON(userPlannedTripsJSON);
+	console.log(userPlannedTrips);
+	// Add to trip list
+	userPlannedTrips.forEach( function ( elem ) { 
+		$("#planList").append($("<li>").append($("<a href=\"#\">" + elem.tripName + "</a>").addClass("plannedTripSelect")));
+	})
+}
+// Draw Map
+drawRegionsMap(userPlannedTrips, "planned");
+
 
 // Open past trip details if it's selected from the list
 $('.tripSelect').click(function (e) {
@@ -44,10 +60,23 @@ $('.tripSelect').click(function (e) {
 		$activeTrip.remove();
 		tripActive = false;
 	}
-	addTrip('#past', $tripTemplate);
+	addTrip('#past', $tripTemplate, "past");
 	loadTrip(userTrips[checkForTrip(this.innerHTML, userTrips)]);
 	attachEvents();
 	$("#tripName")[0].text = userTrips[checkForTrip(this.innerHTML, userTrips)].tripName;
+});
+
+// Open past trip details if it's selected from the list
+$('.plannedTripSelect').click(function (e) {
+	e.preventDefault();
+	if ($activeTrip){
+		$activeTrip.remove();
+		tripActive = false;
+	}
+	addTrip('#planned', $plannedTripTemplate, "planned");
+	loadTrip(userPlannedTrips[checkForTrip(this.innerHTML, userPlannedTrips)]);
+	attachEvents();
+	$("#tripName")[0].text = userPlannedTrips[checkForTrip(this.innerHTML, userPlannedTrips)].tripName;
 });
 
 // Button to add a new past trip
@@ -57,7 +86,7 @@ $('#createNewPast').click(function (e) {
 		$activeTrip.remove();
 		tripActive = false;
 	}
-	addTrip('#past', $tripTemplate);
+	addTrip('#past', $tripTemplate, "past");
 	$("#tripName")[0].text = "New Trip";
 });
 
@@ -68,7 +97,7 @@ $('#createNewPlanned').click(function (e) {
 		$activeTrip.remove();
 		tripActive = false;
 	}
-	addTrip('#planned', $plannedTripTemplate);
+	addTrip('#planned', $plannedTripTemplate, "planned");
 	$("#tripName")[0].text = "New Plan";
 })
 
@@ -95,13 +124,13 @@ function checkForTrip (tripName, existing) {
 	}
 }
 
-function addTrip( appendTo, tripTemplate ) {
+function addTrip( appendTo, tripTemplate, type ) {
 	if( tripActive == false ){
 		$activeTrip = tripTemplate.clone().appendTo( appendTo ).fadeIn(400);
 		tripActive = true;
 	}
 
-	attachEvents();
+	attachEvents( type );
 }
 
 function loadTrip ( trip ) {
@@ -133,7 +162,7 @@ function loadTrip ( trip ) {
 	}
 }
 
-function attachEvents () {
+function attachEvents ( type ) {
 	$('#dp4').datepicker()
 	.on('changeDate', function(ev){
 		if (ev.date.valueOf() > endDate.valueOf()){
@@ -159,41 +188,67 @@ function attachEvents () {
 	});
 
 	$("#save").on("click", function (e) {
-		// Determine active privacy button
-		var currency;
-		if ( $('#leftoverFalse').hasClass('active') ){
-			currency = false;
-		} else {
-			currency = true;
+		if( type == "past"){
+			// Determine active privacy button
+			var currency;
+			if ( $('#leftoverFalse').hasClass('active') ){
+				currency = false;
+			} else {
+				currency = true;
+			}
+
+			// Get form values
+			var newTrip = {
+				tripName : $("#newTripName").val(),
+				destination : $("#destination").val(),
+				startDate : $("#startDate")[0].innerHTML,
+				endDate : $("#endDate")[0].innerHTML,
+				activities : $("#activities")[0].value,
+				recommendations : $("#recommendations")[0].value,
+				leftoverCurrency : currency
+			}
+
+			// Check if this is a new trip or one that needs to be upated. Returns either false of the index
+			var tripExists = checkForTrip(newTrip.tripName, userTrips);
+			if( tripExists === false ){
+				userTrips.push(newTrip);
+				$("#tripName")[0].text = newTrip.tripName;
+				$("#tripList").append($("<li>").append($("<a href=\"#\">" + newTrip.tripName + "</a>").addClass("tripSelect")));
+			} else {
+				userTrips[tripExists] = newTrip;
+			}
+			console.log(userTrips);
+
+			// Convert to JSON and save to localStorage
+			var userTripsJSON = JSON.stringify(userTrips);
+			localStorage.setItem("TravelBuddyMyTrips", userTripsJSON);
+			drawRegionsMap(userTrips, "past");
+		} else if (type == "planned" ){
+			// Get form values
+			var newTrip = {
+				tripName : $("#newTripName").val(),
+				destination : $("#destination").val(),
+				startDate : $("#startDate")[0].innerHTML,
+				endDate : $("#endDate")[0].innerHTML,
+				activities : $("#activities")[0].value,
+				travelStyle : $("#travelStyle")[0].value,
+			}
+
+			var tripExists = checkForTrip(newTrip.tripName, userPlannedTrips);
+			if( tripExists === false ){
+				userPlannedTrips.push(newTrip);
+				$("#tripName")[0].text = newTrip.tripName;
+				$("#planList").append($("<li>").append($("<a href=\"#\">" + newTrip.tripName + "</a>").addClass("plannedTripSelect")));
+			} else {
+				userPlannedTrips[tripExists] = newTrip;
+			}
+			console.log(userPlannedTrips);
+
+			// Convert to JSON and save to localStorage
+			var userPlannedTripsJSON = JSON.stringify(userPlannedTrips);
+			localStorage.setItem("TravelBuddyMyPlannedTrips", userPlannedTripsJSON);
+			drawRegionsMap(userPlannedTrips, "planned");
 		}
-
-		// Get form values
-		var newTrip = {
-			tripName : $("#newTripName").val(),
-			destination : $("#destination").val(),
-			startDate : $("#startDate")[0].innerHTML,
-			endDate : $("#endDate")[0].innerHTML,
-			activities : $("#activities")[0].value,
-			recommendations : $("#recommendations")[0].value,
-			leftoverCurrency : currency
-		}
-
-		// Check if this is a new trip or one that needs to be upated. Returns either false of the index
-		var tripExists = checkForTrip(newTrip.tripName, userTrips);
-		if( tripExists === false ){
-			userTrips.push(newTrip);
-			$("#tripName")[0].text = newTrip.tripName;
-			$("#tripList").append($("<li>").append($("<a href=\"#\">" + newTrip.tripName + "</a>").addClass("tripSelect")));
-		} else {
-			userTrips[tripExists] = newTrip;
-		}
-		console.log(userTrips);
-
-		// Convert to JSON and save to localStorage
-		var userTripsJSON = JSON.stringify(userTrips);
-		localStorage.setItem("TravelBuddyMyTrips", userTripsJSON);
-		drawRegionsMap(userTrips);
-
 		/*
 		// Check that the values were saved
 		if( localStorage.getItem("TravelBuddyMyTrips") != null ){
@@ -221,45 +276,67 @@ function addVisited ( countryName ){
 	}
 }
 
-function drawRegionsMap(visited) {
+function drawRegionsMap(visited, type) {
 	$.ajax({
 		type: "get",
 		dataType: "json",
 		url: "/js/country4.json",
 		success: function (data, textStatus, jqXHR) {
-			countries = data;
-			visited.forEach( function (elem) {
-				addVisited(elem.destination);
-			})
-			var ndata = google.visualization.arrayToDataTable(countries);
+			if( type == "past"){
+				countries = data;
+				visited.forEach( function (elem) {
+					addVisited(elem.destination);
+				})
+				var ndata = google.visualization.arrayToDataTable(countries);
+
+				var options = {
+					height: 890,
+					width: 1200,
+					backgroundColor: "#DFF0F5",
+					colorAxis: {
+									colors:['#FFFFFF','#1EC75F'],
+									minValue:0,
+									maxValue:1
+								},
+					legend: "none"
+				};
 
 
-			var options = {
-				height: 890,
-				width: 1200,
-				backgroundColor: "#DFF0F5",
-				colorAxis: {
-								colors:['#FFFFFF','#1EC75F'],
-								minValue:0,
-								maxValue:1
-							},
-				legend: "none"
-			};
+				var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
+				chart.draw(ndata, options);
+				google.visualization.events.addListener(chart, 'regionClick', function(eventData)
+				{
+					$('#destination').val(getText(eventData.region, countries));
+				});
+			} else if (type == "planned"){
+				countries = data;
+				visited.forEach( function (elem) {
+					addVisited(elem.destination);
+				})
+				var ndata = google.visualization.arrayToDataTable(countries);
 
+				var options = {
+					height: 890,
+					width: 1200,
+					backgroundColor: "#DFF0F5",
+					colorAxis: {
+									colors:['#FFFFFF','#C71E86'],
+									minValue:0,
+									maxValue:1
+								},
+					legend: "none"
+				};
 
+				var chart2 = new google.visualization.GeoChart(document.getElementById('chart_div2'));
+				chart2.draw(ndata, options);
 
-			var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
-			var chart2 = new google.visualization.GeoChart(document.getElementById('chart_div2'));
-			
-			chart.draw(ndata, options);
-			chart2.draw(ndata, options);
-
-			google.visualization.events.addListener(chart, 'regionClick', function(eventData)
-			{
-				$('#destination').val(getText(eventData.region, countries));
-			});
+				google.visualization.events.addListener(chart2, 'regionClick', function(eventData)
+				{
+					$('#destination').val(getText(eventData.region, countries));
+				});
+			}
 		}
 	});
-};
+}
 
 });
