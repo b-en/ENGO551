@@ -1,42 +1,26 @@
 var tripActive = false;
 var $activeTrip;
+var countries;
 
 // New map
 google.load('visualization', '1', {'packages': ['geochart']});
-google.setOnLoadCallback(drawRegionsMap);
-
-function drawRegionsMap() {
-	var data = google.visualization.arrayToDataTable([
-		['Country', 'Popularity'],
-		['Germany', 200],
-		['United States', 300],
-		['Brazil', 400],
-		['Canada', 500],
-		['France', 600],
-		['RU', 700]
-	]);
-
-	var options = {};
-
-	var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
-	chart.draw(data, options);
-};
 
 $(document).ready(function() {
 
 // Tabs for Past Travels and Planned Travels
-$('#past a').click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
+$('#pastTab a').click(function (e) {
+	e.preventDefault();
+	$(this).tab('show');
 });
-$('#planned a').click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
+$('#plannedTab a').click(function (e) {
+	e.preventDefault();
+	$(this).tab('show');
 });
 
 var $tripTemplate = $("#tripTemplate").children();
+var $plannedTripTemplate = $("#plannedTripTemplate").children();
 $("#tripTemplate").remove();
-
+$("#plannedTripTemplate").remove();
 var userTrips = [];
 
 // Load trips if they exist
@@ -45,9 +29,12 @@ if( localStorage.getItem("TravelBuddyMyTrips") != null ){
 	var userTripsJSON = localStorage.getItem("TravelBuddyMyTrips"),
 		userTrips = $.parseJSON(userTripsJSON);
 	console.log(userTrips);
+	// Add to trip list
 	userTrips.forEach( function ( elem ) { 
 		$("#tripList").append($("<li>").append($("<a href=\"#\">" + elem.tripName + "</a>").addClass("tripSelect")));
 	})
+	// Draw Map
+	drawRegionsMap(userTrips);
 }
 
 // Open past trip details if it's selected from the list
@@ -73,6 +60,17 @@ $('#createNewPast').click(function (e) {
 	addTrip('#past', $tripTemplate);
 	$("#tripName")[0].text = "New Trip";
 });
+
+// Button to add a new future trip
+$('#createNewPlanned').click(function (e) {
+		e.preventDefault();
+	if ($activeTrip){
+		$activeTrip.remove();
+		tripActive = false;
+	}
+	addTrip('#planned', $plannedTripTemplate);
+	$("#tripName")[0].text = "New Plan";
+})
 
 // Date picker
 var startDate = new Date(2013,1,1);
@@ -185,7 +183,7 @@ function attachEvents () {
 		if( tripExists === false ){
 			userTrips.push(newTrip);
 			$("#tripName")[0].text = newTrip.tripName;
-			$("#tripList").append($("<li>").append($("<a href=\"#\">" + newTrip.tripName + "</a>")));
+			$("#tripList").append($("<li>").append($("<a href=\"#\">" + newTrip.tripName + "</a>").addClass("tripSelect")));
 		} else {
 			userTrips[tripExists] = newTrip;
 		}
@@ -194,6 +192,7 @@ function attachEvents () {
 		// Convert to JSON and save to localStorage
 		var userTripsJSON = JSON.stringify(userTrips);
 		localStorage.setItem("TravelBuddyMyTrips", userTripsJSON);
+		drawRegionsMap(userTrips);
 
 		/*
 		// Check that the values were saved
@@ -205,5 +204,62 @@ function attachEvents () {
 		*/
 	});
 }
+
+function getText( code, countries ){
+	for( var i=0; i < countries.length; i++){
+		if( countries[i][0] == code){
+			return countries[i][1];
+		}
+	}
+}
+
+function addVisited ( countryName ){
+	for(var i = 0; i < countries.length; i++){
+		if( countryName == countries[i][1]){
+			countries[i][2] = countries[i][2] + 1;
+		}
+	}
+}
+
+function drawRegionsMap(visited) {
+	$.ajax({
+		type: "get",
+		dataType: "json",
+		url: "/js/country4.json",
+		success: function (data, textStatus, jqXHR) {
+			countries = data;
+			visited.forEach( function (elem) {
+				addVisited(elem.destination);
+			})
+			var ndata = google.visualization.arrayToDataTable(countries);
+
+
+			var options = {
+				height: 890,
+				width: 1200,
+				backgroundColor: "#DFF0F5",
+				colorAxis: {
+								colors:['#FFFFFF','#1EC75F'],
+								minValue:0,
+								maxValue:1
+							},
+				legend: "none"
+			};
+
+
+
+			var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
+			var chart2 = new google.visualization.GeoChart(document.getElementById('chart_div2'));
+			
+			chart.draw(ndata, options);
+			chart2.draw(ndata, options);
+
+			google.visualization.events.addListener(chart, 'regionClick', function(eventData)
+			{
+				$('#destination').val(getText(eventData.region, countries));
+			});
+		}
+	});
+};
 
 });

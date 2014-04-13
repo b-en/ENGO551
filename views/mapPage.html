@@ -11,20 +11,18 @@
 {% include "navBar.html" %}
 <div class="container-fluid">
 	<div class="row">
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#pastTab" data-toggle="tab"><span class="glyphicon glyphicon-globe"></span>  My Past Travels</a></li>
+			<li><a href="#plannedTab" data-toggle="tab"><span class="glyphicon glyphicon-plane"></span>  My Travel Plans</a></li>
+		</ul>
 		
-		<div class="col-md-4" id="controls">
-			<!-- Nav tabs -->
-			<ul class="nav nav-tabs">
-				<li class="active"><a href="#past" data-toggle="tab"><span class="glyphicon glyphicon-globe"></span>  My Past Travels</a></li>
-				<li><a href="#planned" data-toggle="tab"><span class="glyphicon glyphicon-plane"></span>  My Travel Plans</a></li>
-			</ul>
+		<!-- Tab panes -->
+		<div class="tab-content">
 
-			<!-- Tab panes -->
-			<div class="tab-content">
-
-				<!-- Past Trips Pane -->
-				<div class="tab-pane active fade in" id="past">
-					
+			<!-- Past Trips Pane -->
+			<div id="pastTab" class="tab-pane active fade in">
+				<div id="past" class="col-md-4">
 					<!-- Control bar at top of past trips pane -->
 					<nav class="navbar navbar-default" role="navigation">
 						<div class="container-fluid">
@@ -44,12 +42,17 @@
 							</div><!-- /.navbar-collapse -->
 						</div><!-- /.container-fluid -->
 					</nav>
+				</div>
 
-				</div><!-- /.Past Trips Pane -->
+				<div class="col-md-8">
+					<div id='chart_div' class='map'></div>
+				</div><!-- /.map -->
 
-				<!-- Planned Trips Pane -->
-				<div class="tab-pane fade" id="planned">
+			</div><!-- /.Past Trips Pane -->
 
+			<!-- Planned Trips Pane -->
+			<div id="plannedTab" class="tab-pane fade">
+				<div id="planned" class="col-md-4">
 					<!-- Control bar at top of planned trips pane -->
 					<nav class="navbar navbar-default" role="navigation">
 						<div class="container-fluid">
@@ -71,76 +74,126 @@
 							</div><!-- /.navbar-collapse -->
 						</div><!-- /.container-fluid -->
 					</nav>
-				</div> <!-- /.Planned Trips Page -->
-			</div>
+				</div>
 
-			<!-- Trip template -->
-			<div id="tripTemplate">
-				<div class="panel panel-default">
+				<div class="col-md-8">
+					<div id='chart_div2' class='map'></div>
+				</div><!-- /.map -->
 
-					<div class="panel-heading">
-						<h3 class="panel-title">Add your trip details</h3>
-					</div><!-- /.panel-heading -->
+			</div> <!-- /.Planned Trips Page -->
 
-					<div class="panel-body">
-						<h4>Trip Overview</h4>
-						<div class="input-group">
-							<span class="input-group-addon">Name</span>
-							<input type="text" class="form-control" placeholder="My Trip name" id="newTripName">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon">Destination</span>
-							<input type="text" class="form-control" placeholder="Where I was" id="destination">
-						</div>
-						<!-- Date panel -->
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Start date  <a href="#" type="button" class="btn btn-sm" id="dp4" data-date-format="yyyy-mm-dd" data-date="2013-01-01">Change</a></th>
-									<th>End date  <a href="#" type="button" class="btn btn-sm" id="dp5" data-date-format="yyyy-mm-dd" data-date="2014-01-01">Change</a></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td id="startDate">2013-01-01</td>
-									<td id="endDate">2014-01-01</td>
-								</tr>
-							</tbody>
-						</table>
-						<!-- Alert -->
-						<div class="alert alert-error" id="alert">
-							<strong>Oh snap!</strong>
-						</div>
-						<!-- /.Date panel -->
+		</div><!-- /.Tab panes -->
 
-						<!-- Details -->
-						<h4>Trip Details</h4>
-						<h5>Things I did</h5>
-						<textarea class="form-control" id="activities" rows="3"></textarea>
-						<h5>My Recommendations</h5>
-						<textarea class="form-control" id="recommendations" rows="3"></textarea>
-						<p>
-							<ul class="nav nav-pills">
-								<li class="active" id="leftoverFalse"><a href="#" data-toggle="pill">I don't have leftover currency</a></li>
-								<li id="leftoverTrue"><a href="#" data-toggle="pill">I have leftover currency</a></li>
-							</ul>
-						</p>
+		<!-- Trip template -->
+		<div id="tripTemplate">
+			<div class="panel panel-default">
 
-						<!-- Save Button -->
-						<button type="button" class="btn btn-success btn-lg" id="save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
-					</div><!-- /.panel-body -->
-				</div><!-- /.panel -->
-			</div><!-- /.TripTemplate -->
+				<div class="panel-heading">
+					<h3 class="panel-title">Add your trip details</h3>
+				</div><!-- /.panel-heading -->
 
-		</div><!-- /.controls -->
+				<div class="panel-body">
+					<h4>Trip Overview</h4>
+					<div class="input-group">
+						<span class="input-group-addon">Name</span>
+						<input type="text" class="form-control" placeholder="My Trip name" id="newTripName">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon">Destination</span>
+						<input type="text" class="form-control" placeholder="Pick from map" id="destination" disabled>
+					</div>
+					<!-- Date panel -->
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Start date  <a href="#" type="button" class="btn btn-sm" id="dp4" data-date-format="yyyy-mm-dd" data-date="2013-01-01">Change</a></th>
+								<th>End date  <a href="#" type="button" class="btn btn-sm" id="dp5" data-date-format="yyyy-mm-dd" data-date="2014-01-01">Change</a></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td id="startDate">2013-01-01</td>
+								<td id="endDate">2014-01-01</td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- Alert -->
+					<div class="alert alert-error" id="alert">
+						<strong>Oh snap!</strong>
+					</div>
+					<!-- /.Date panel -->
 
-		<div class="col-md-8">
-			<!-- OLD MAP
-			<input id="pac-input" class="controls" type="text" placeholder="Search Box">
-			<div class="google-map-canvas" id="mapCanvas">hi</div>
-			-->
-			<div id='chart_div'></div>
-		</div><!-- /.map -->
+					<!-- Details -->
+					<h4>Trip Details</h4>
+					<h5>Things I did</h5>
+					<textarea class="form-control" id="activities" rows="3"></textarea>
+					<h5>My Recommendations</h5>
+					<textarea class="form-control" id="recommendations" rows="3"></textarea>
+					<p>
+						<ul class="nav nav-pills">
+							<li class="active" id="leftoverFalse"><a href="#" data-toggle="pill">I don't have leftover currency</a></li>
+							<li id="leftoverTrue"><a href="#" data-toggle="pill">I have leftover currency</a></li>
+						</ul>
+					</p>
+
+					<!-- Save Button -->
+					<button type="button" class="btn btn-success btn-lg" id="save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+				</div><!-- /.panel-body -->
+			</div><!-- /.panel -->
+		</div><!-- /.TripTemplate -->
+
+		<!-- Planned Trip template -->
+		<div id="plannedTripTemplate">
+			<div class="panel panel-default">
+
+				<div class="panel-heading">
+					<h3 class="panel-title">Add your trip details</h3>
+				</div><!-- /.panel-heading -->
+
+				<div class="panel-body">
+					<h4>Trip Overview</h4>
+					<div class="input-group">
+						<span class="input-group-addon">Name</span>
+						<input type="text" class="form-control" placeholder="My Trip name" id="TripName">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon">Destination</span>
+						<input type="text" class="form-control" placeholder="Pick from map" id="destination" disabled>
+					</div>
+					<!-- Date panel -->
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Start date  <a href="#" type="button" class="btn btn-sm" id="dp4" data-date-format="yyyy-mm-dd" data-date="2013-01-01">Change</a></th>
+								<th>End date  <a href="#" type="button" class="btn btn-sm" id="dp5" data-date-format="yyyy-mm-dd" data-date="2014-01-01">Change</a></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td id="startDate">2013-01-01</td>
+								<td id="endDate">2014-01-01</td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- Alert -->
+					<div class="alert alert-error" id="alert">
+						<strong>Oh snap!</strong>
+					</div>
+					<!-- /.Date panel -->
+
+					<!-- Details -->
+					<h4>Trip Details</h4>
+					<h5>Things I want to do</h5>
+					<textarea class="form-control" id="activities" rows="3"></textarea>
+					<h5>Travel Style</h5>
+					<textarea class="form-control" id="travelStyle" rows="3"></textarea>
+
+					<!-- Save Button -->
+					<button type="button" class="btn btn-success btn-lg" id="save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+				</div><!-- /.panel-body -->
+			</div><!-- /.panel -->
+		</div><!-- /.TripTemplate -->
+
 
 	</div><!-- /.row -->
 </div><!-- /.container-fluid -->
