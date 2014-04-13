@@ -17,12 +17,15 @@ $('#plannedTab a').click(function (e) {
 	$(this).tab('show');
 });
 
+// Get and remove templates
 var $tripTemplate = $("#tripTemplate").children();
 var $plannedTripTemplate = $("#plannedTripTemplate").children();
 var $otherPlannedTripTemplate = $('#otherPlannedTripTemplate').children();
+var $otherPastTripTemplate = $('#otherPastTripTemplate').children();
 $("#tripTemplate").remove();
 $("#plannedTripTemplate").remove();
 $('#otherPlannedTripTemplate').remove();
+$('#otherPastTripTemplate').remove();
 var userTrips = [];
 var userPlannedTrips = [];
 
@@ -148,12 +151,15 @@ $.ajax({
 							chart3.draw(ndata, options);
 							google.visualization.events.addListener(chart3, 'regionClick', function(eventData)
 							{
+								$('.otherTrip').remove();
 								var countryName = getText(eventData.region, countries);
 								data.forEach( function (elem) {
 									elem.past.forEach( function (elem2) {
 										if (elem2.destination == countryName){
 											// Add past trip details
-
+											var template = $otherPastTripTemplate.clone().prependTo('#othersPast').fadeIn(400);
+											$("#otherUsername").prepend(elem.user.username);
+											loadOtherTrip(elem2, elem.user, "past");
 										}
 									});
 								});
@@ -161,8 +167,9 @@ $.ajax({
 									elem.planned.forEach( function (elem2) {
 										if (elem2.destination == countryName){
 											// Add planned trip details
-											var template = $otherPlannedTripTemplate.clone().appendTo('#others').fadeIn(400);
-											$("#otherUserName").val(elem.user.username);
+											var template = $otherPlannedTripTemplate.clone().prependTo('#others').fadeIn(400);
+											$("#otherUsername").prepend(elem.user.username);
+											loadOtherTrip(elem2, elem.user, "planned");
 										}
 									});
 								});
@@ -232,6 +239,42 @@ function loadTrip ( trip, type ) {
 	} else if (type == "planned"){
 		if( trip.travelStyle != null && trip.travelStyle != ""){
 			$('#travelStyle')[0].value = trip.travelStyle;
+		}
+	}
+}
+
+function loadOtherTrip ( trip, user, type ) {
+	if( user.email != null && user.email != ""){
+		$("#userEmail").append(user.email);
+	}
+	if( trip.tripName != null && trip.tripName != ""){
+		$('#newTripName').append(trip.tripName);
+	}
+	if( trip.destination != null && trip.destination != ""){
+		$('#destination').append(trip.destination);
+	}
+	// Display existing values on form
+	if( trip.startDate != null && trip.startDate != ""){
+		$('#startDate')[0].innerHTML = trip.startDate;
+	}
+	if( trip.endDate != null && trip.endDate != ""){
+		$('#endDate')[0].innerHTML = trip.endDate;
+	}
+	if( trip.activities != null && trip.activities != ""){
+		$('#activities').append(trip.activities);
+	}
+	if( type == "past"){
+		if( trip.recommendations != null && trip.recommendations != ""){
+			$('#recommendations').append(trip.recommendations);
+		}
+		if( trip.leftoverCurrency === true ){
+			$('#leftovers').append("yes");
+		} else {
+			$('#leftovers').append("no");
+		}
+	} else if (type == "planned"){
+		if( trip.travelStyle != null && trip.travelStyle != ""){
+			$('#travelStyle').append(trip.travelStyle);
 		}
 	}
 }
@@ -323,14 +366,6 @@ function attachEvents ( type ) {
 			localStorage.setItem("TravelBuddyMyPlannedTrips", userPlannedTripsJSON);
 			drawRegionsMap(userPlannedTrips, "planned");
 		}
-		/*
-		// Check that the values were saved
-		if( localStorage.getItem("TravelBuddyMyTrips") != null ){
-			$alertSuccess.fadeIn(400).delay(1000).fadeOut(800);
-		} else {
-			$alertFailure.fadeIn(400).delay(1000).fadeOut(800);
-		}
-		*/
 	});
 }
 

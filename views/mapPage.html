@@ -85,14 +85,25 @@
 
 			<!-- Others Trips Pane -->
 			<div id="othersTab" class="tab-pane fade">
-				<div id="others" class="col-md-4">
-
-				</div>
-
-				<div class="col-md-8">
-					<div id='chart_div3' class='map'></div>
-				</div><!-- /.map -->
-
+				<row>
+					<div class="col-md-4">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<h3>Buddy's planned trips</h3>
+								<div id="others"></div>
+							</div>
+						</div>
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<h3>Buddy's past trips</h3>
+								<div id="othersPast"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-8">
+						<div id='chart_div3' class='map'></div>
+					</div><!-- /.map -->
+				</row>
 			</div> <!-- /.Planned Trips Page -->
 
 		</div><!-- /.Tab panes -->
@@ -209,16 +220,22 @@
 
 		<!-- Other user's Planned Trip template -->
 		<div id="otherPlannedTripTemplate">
-			<div class="panel panel-default">
+			<div class="panel panel-default otherTrip">
 
 				<div class="panel-heading">
-					<h3 class="panel-title" id="otherUsername"></h3>
+					<h3 class="panel-title" id="otherUsername">'s trip plans</h3>
 				</div><!-- /.panel-heading -->
 
 				<div class="panel-body">
-					<h4>Trip Overview</h4>
-					<div id="newTripName"></div>
-					<div id="destination"></div>
+					<h3>Overview</h4>
+					<dl class="dl-horizontal">
+  						<dt>Contact email: </dt>
+  						<dd id="userEmail"></dd>
+    					<dt>Trip name: </dt>
+  						<dd id="newTripName"></dd>
+  						<dt>Destination: </dt>
+  						<dd id="destination"></dd>
+					</dl>
 					<!-- Date panel -->
 					<table class="table">
 						<thead>
@@ -237,11 +254,59 @@
 					<!-- /.Date panel -->
 
 					<!-- Details -->
-					<h4>Trip Details</h4>
-					<h5>Things I want to do</h5>
-					<div id="activities" rows="3"></div>
-					<h5>Travel Style</h5>
-					<div id="travelStyle" rows="3"></div>
+					<h3>Trip Details</h4>
+					<h4>Things I want to do</h5>
+					<div id="activities"></div>
+					<h4>Travel Style</h5>
+					<div id="travelStyle"></div>
+
+				</div><!-- /.panel-body -->
+			</div><!-- /.panel -->
+		</div><!-- /.OtherUsersPlannedTripTemplate -->
+
+		<!-- Other user's Planned Trip template -->
+		<div id="otherPastTripTemplate">
+			<div class="panel panel-default otherTrip">
+
+				<div class="panel-heading">
+					<h3 class="panel-title" id="otherUsername">'s trip plans</h3>
+				</div><!-- /.panel-heading -->
+
+				<div class="panel-body">
+					<h3>Overview</h4>
+					<dl class="dl-horizontal">
+  						<dt>Contact email: </dt>
+  						<dd id="userEmail"></dd>
+    					<dt>Trip name: </dt>
+  						<dd id="newTripName"></dd>
+  						<dt>Destination: </dt>
+  						<dd id="destination"></dd>
+  						<dt>Leftover currency: </dt>
+  						<dd id="leftovers"><dd>
+					</dl>
+					<!-- Date panel -->
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Start date</th>
+								<th>End date</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td id="startDate"></td>
+								<td id="endDate"></td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- /.Date panel -->
+
+					<!-- Details -->
+					<h3>Trip Details</h4>
+					<h4>Things I did</h5>
+					<div id="activities"></div>
+					<h4>Recommendations</h5>
+					<div id="recommendations"></div>
 
 				</div><!-- /.panel-body -->
 			</div><!-- /.panel -->
