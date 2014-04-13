@@ -1,0 +1,42 @@
+[
+	{
+		"user":{
+			"username":"Ben",
+			"city":"calgs",
+			"country":"Canada",
+			"email":"ben@example.ca",
+			"sharing":"group"
+		},
+		"past":[
+			{"tripName":"Geo Switzerland Trip","destination":"Switzerland","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Tours, CERN, Lieca","recommendations":"Have the hemp beer in bern","leftoverCurrency":false},
+			{"tripName":"Internship","destination":"New Zealand","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Worked at Trimble","recommendations":"See the North Island during summer.","leftoverCurrency":true},
+			{"tripName":"Ski Trip 2012","destination":"United States","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Skiing in Montana","recommendations":"Make sure you are over 21","leftoverCurrency":false},
+			{"tripName":"Snow Shoeing Kananaskis","destination":"Canada","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Went to Kananaskis","recommendations":"Feed the birds","leftoverCurrency":true}
+		],
+		"planned":[
+			{"tripName":"Go nuts","destination":"Thailand","startDate":"2013-01-01","endDate":"2014-01-01","activities":"See temples, drink beer, do stuff","travelStyle":"Party"},
+			{"tripName":"Robot Time","destination":"Japan","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Check out some technology","travelStyle":"Conservative"},
+			{"tripName":"Sun bathing","destination":"Spain","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Get some sun, go to Ibiza","travelStyle":"party"},
+			{"tripName":"Take over some countries","destination":"Russian Federation","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Be russian, drink vodka","travelStyle":"Conquer all before us"}
+		]
+	},
+	{
+		"user":{
+			"username":"Tim",
+			"city":"",
+			"country":"Nigeria",
+			"email":"tim@example.ca",
+			"sharing":"group"
+		},
+		"past":[
+			{"tripName":"Groceries","destination":"Nigeria","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Got groceries","recommendations":"Don't get groceries at Pak n' Save","leftoverCurrency":false},
+			{"tripName":"GeoThermal Tour","destination":"Iceland","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Geothermal Activities","recommendations":"Watch a volcanoe","leftoverCurrency":false},
+			{"tripName":"Mexico Spring Break","destination":"Mexico","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Watched babes on the beach","recommendations":"Go to an all inclusive","leftoverCurrency":false}
+		],
+		"planned":[
+			{"tripName":"See the rockey mountains","destination":"Canada","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Go to the mountains in Alberta","travelStyle":"Conservative"},
+			{"tripName":"Aussie Rules","destination":"Australia","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Go to the beach","travelStyle":"Party"},
+			{"tripName":"Full Moon Partying","destination":"Thailand","startDate":"2013-01-01","endDate":"2014-01-01","activities":"Go to a full moon party, ride an elephant, go swimming","travelStyle":"Party"}
+		]
+	}
+]

@@ -58,7 +58,7 @@
 					<nav class="navbar navbar-default" role="navigation">
 						<div class="container-fluid">
 							<div class="navbar-header">
-								<a class="navbar-brand" href="#">Select a plan</a>
+								<a class="navbar-brand" id="planName">Select a plan</a>
 							</div>
 							<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 								<ul class="nav navbar-nav">
@@ -102,7 +102,7 @@
 			<div class="panel panel-default">
 
 				<div class="panel-heading">
-					<h3 class="panel-title">Add your trip details</h3>
+					<h3 class="panel-title">Add/Edit your trip details</h3>
 				</div><!-- /.panel-heading -->
 
 				<div class="panel-body">
@@ -160,7 +160,7 @@
 			<div class="panel panel-default">
 
 				<div class="panel-heading">
-					<h3 class="panel-title">Add your trip details</h3>
+					<h3 class="panel-title">Add/Edit your trip details</h3>
 				</div><!-- /.panel-heading -->
 
 				<div class="panel-body">
@@ -207,6 +207,45 @@
 			</div><!-- /.panel -->
 		</div><!-- /.TripTemplate -->
 
+		<!-- Other user's Planned Trip template -->
+		<div id="otherPlannedTripTemplate">
+			<div class="panel panel-default">
+
+				<div class="panel-heading">
+					<h3 class="panel-title" id="otherUsername"></h3>
+				</div><!-- /.panel-heading -->
+
+				<div class="panel-body">
+					<h4>Trip Overview</h4>
+					<div id="newTripName"></div>
+					<div id="destination"></div>
+					<!-- Date panel -->
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Start date</th>
+								<th>End date</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td id="startDate"></td>
+								<td id="endDate"></td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- /.Date panel -->
+
+					<!-- Details -->
+					<h4>Trip Details</h4>
+					<h5>Things I want to do</h5>
+					<div id="activities" rows="3"></div>
+					<h5>Travel Style</h5>
+					<div id="travelStyle" rows="3"></div>
+
+				</div><!-- /.panel-body -->
+			</div><!-- /.panel -->
+		</div><!-- /.OtherUsersPlannedTripTemplate -->
 
 	</div><!-- /.row -->
 </div><!-- /.container-fluid -->

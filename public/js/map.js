@@ -1,7 +1,7 @@
 var tripActive = false;
 var $activeTrip;
 var countries;
-
+var othersData;
 // New map
 google.load('visualization', '1', {'packages': ['geochart']});
 
@@ -19,8 +19,10 @@ $('#plannedTab a').click(function (e) {
 
 var $tripTemplate = $("#tripTemplate").children();
 var $plannedTripTemplate = $("#plannedTripTemplate").children();
+var $otherPlannedTripTemplate = $('#otherPlannedTripTemplate').children();
 $("#tripTemplate").remove();
 $("#plannedTripTemplate").remove();
+$('#otherPlannedTripTemplate').remove();
 var userTrips = [];
 var userPlannedTrips = [];
 
@@ -61,7 +63,7 @@ $('.tripSelect').click(function (e) {
 		tripActive = false;
 	}
 	addTrip('#past', $tripTemplate, "past");
-	loadTrip(userTrips[checkForTrip(this.innerHTML, userTrips)]);
+	loadTrip(userTrips[checkForTrip(this.innerHTML, userTrips)], "past");
 	attachEvents();
 	$("#tripName")[0].text = userTrips[checkForTrip(this.innerHTML, userTrips)].tripName;
 });
@@ -74,9 +76,9 @@ $('.plannedTripSelect').click(function (e) {
 		tripActive = false;
 	}
 	addTrip('#planned', $plannedTripTemplate, "planned");
-	loadTrip(userPlannedTrips[checkForTrip(this.innerHTML, userPlannedTrips)]);
+	loadTrip(userPlannedTrips[checkForTrip(this.innerHTML, userPlannedTrips)], "planned");
 	attachEvents();
-	$("#tripName")[0].text = userPlannedTrips[checkForTrip(this.innerHTML, userPlannedTrips)].tripName;
+	$("#planName")[0].text = userPlannedTrips[checkForTrip(this.innerHTML, userPlannedTrips)].tripName;
 });
 
 // Button to add a new past trip
@@ -104,6 +106,75 @@ $('#createNewPlanned').click(function (e) {
 // Date picker
 var startDate = new Date(2013,1,1);
 var endDate = new Date(2014,1,1);
+
+// Load other user's data
+$.ajax({
+		type: "get",
+		dataType: "json",
+		url: "/js/country4.json",
+		success: function (data, textStatus, jqXHR) {
+			countries = data;
+			$.ajax({
+					type: "get",
+					dataType: "json",
+					url: "/js/benOptions.json",
+					success: function (data, textStatus, jqXHR) {
+							console.log("Heres some shit");
+							console.log(data);
+
+							data.forEach( function (elem) {
+								elem.past.forEach( function (elem2) {
+									addVisited(elem2.destination);
+								});
+							});
+							data.forEach( function (elem) {
+								elem.planned.forEach( function (elem2) {
+									addVisited(elem2.destination);
+								});
+							});
+							var ndata = google.visualization.arrayToDataTable(countries);
+
+							var options = {
+								height: 890,
+								width: 1200,
+								backgroundColor: "#DFF0F5",
+								colorAxis: {
+												colors:['#FFFFFF','#FF5900'], 
+											},
+							};
+
+
+							var chart3 = new google.visualization.GeoChart(document.getElementById('chart_div3'));
+							chart3.draw(ndata, options);
+							google.visualization.events.addListener(chart3, 'regionClick', function(eventData)
+							{
+								var countryName = getText(eventData.region, countries);
+								data.forEach( function (elem) {
+									elem.past.forEach( function (elem2) {
+										if (elem2.destination == countryName){
+											// Add past trip details
+
+										}
+									});
+								});
+								data.forEach( function (elem) {
+									elem.planned.forEach( function (elem2) {
+										if (elem2.destination == countryName){
+											// Add planned trip details
+											var template = $otherPlannedTripTemplate.clone().appendTo('#others').fadeIn(400);
+											$("#otherUserName").val(elem.user.username);
+										}
+									});
+								});
+							});
+							othersData = data;
+					},
+					error: function( ) {
+						console.log("fuck");
+					}
+				});
+		}
+});
 
 function checkForTrip (tripName, existing) {
 	var index;
@@ -133,7 +204,7 @@ function addTrip( appendTo, tripTemplate, type ) {
 	attachEvents( type );
 }
 
-function loadTrip ( trip ) {
+function loadTrip ( trip, type ) {
 	// Display existing values on form
 	if( trip.tripName != null && trip.tripName != ""){
 		$('#newTripName').val(trip.tripName);
@@ -150,15 +221,18 @@ function loadTrip ( trip ) {
 	if( trip.activities != null && trip.activities != ""){
 		$('#activities')[0].value = trip.activities;
 	}
-	if( trip.recommendations != null && trip.recommendations != ""){
-		$('#recommendations')[0].value = trip.recommendations;
-	}
-	if( trip.startDate != null && trip.startDate != ""){
-		$('#startDate')[0].innerHTML = trip.startDate;
-	}
-	if( trip.leftoverCurrency === true ){
-		$('#leftoverFalse').removeClass("active");
-		$('#leftoverTrue').addClass("active");
+	if( type == "past"){
+		if( trip.recommendations != null && trip.recommendations != ""){
+			$('#recommendations')[0].value = trip.recommendations;
+		}
+		if( trip.leftoverCurrency === true ){
+			$('#leftoverFalse').removeClass("active");
+			$('#leftoverTrue').addClass("active");
+		}
+	} else if (type == "planned"){
+		if( trip.travelStyle != null && trip.travelStyle != ""){
+			$('#travelStyle')[0].value = trip.travelStyle;
+		}
 	}
 }
 

@@ -2,6 +2,7 @@ $(document).ready(function() {
 
 	var $save = $("#saveAll"),
 		$deleteAll = $('#deleteAll'),
+		$exportAll = $('#export'),
 		$alertSuccess = $("#alertSuccess"),
 		$alertFailure = $("#alertFailure");
 
@@ -75,6 +76,15 @@ $(document).ready(function() {
 		localStorage.removeItem("TravelBuddyOptions");
 		localStorage.removeItem("TravelBuddyMyPlannedTrips");
 		localStorage.removeItem("TravelBuddyMyTrips");
-	})
+	});
+
+	$exportAll.on("click", function (e) {
+		var exportStuff = { 
+			"options" : localStorage.getItem("TravelBuddyOptions"),
+			"planned" : localStorage.getItem("TravelBuddyMyPlannedTrips"),
+			"past" : localStorage.getItem("TravelBuddyMyTrips")
+		};
+		console.log(exportStuff);
+	});
 
 });
